@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+  <meta charset="UTF-8">
+  <title>Live Log Viewer</title>
+
+  <style>
+    body {
+      font-family: monospace;
+      background: #121212;
+      color: #00ff00;
+      padding: 20px;
+    }
+
+    #log {
+      height: 90vh;
+      overflow-y: scroll;
+      white-space: pre-wrap;
+      border: 1px solid #444;
+      padding: 10px;
+      background: #000;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Live Log Viewer</h2> 
+  <div id="log"></div> 
+
+  <script>
+    const logDiv = document.getElementById('log'); 
+    const socket = new WebSocket('ws://localhost:8080');
+
+    socket.onmessage = function(event) {
+      logDiv.textContent += event.data + '\n';
+      logDiv.scrollTop = logDiv.scrollHeight;
+    };
+
+    socket.onopen = () => {
+      logDiv.textContent += "[Connected to server]\n";
+    };
+
+    socket.onclose = () => {
+      logDiv.textContent += "[Disconnected from server]\n";
+    };
+  </script>
+</body>
+</html>
